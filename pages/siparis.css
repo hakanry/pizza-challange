@@ -1,0 +1,74 @@
+body{
+    display: flex;
+    height: 100vh;
+    max-width: 100vh;
+   
+}
+
+
+form {
+   
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1rem;
+    padding: 1rem;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.pizza-degerlendirme {
+    display: flex;
+    justify-content: space-between;
+}
+.pizza-fiyat {
+    flex-grow: 10;
+    font-size: large;
+    color: black;
+}
+.pizza-rating {
+    flex-grow: 1;
+    font-size: large;
+    color: black;
+}
+.pizza-yorum {
+    flex-grow: 1;
+    font-size: large;
+    color: black;
+}
+.pizza-boyut-hamur {
+    display: flex;
+    justify-content: space-evenly;
+;
+}
+.pizza-extra-malzemeler {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+}
+.boyut-radio {
+    display: flex;
+    gap: 1rem;
+}
+
+.siparis-ozet {
+    display: flex;
+    flex: 1
+}
+
+.siparis-adet {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.siparis-toplam {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
