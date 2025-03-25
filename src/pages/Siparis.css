@@ -1,0 +1,130 @@
+.body {
+    background: white;
+}
+.header {
+    background-color: #CE2829;
+    display: inline-block;
+    min-width: 100%;
+    
+    
+}
+.header h1 {
+    text-align: center;
+    padding: 1.5rem;
+}
+.header p {
+    display: block;
+    padding-left: 30%;
+}
+
+
+
+.pizza-formu {
+    max-width: 30%;
+    color: #5F5F5F;
+    padding: 1.5rem;
+
+}
+.pizza-formu h1, h3{
+    color: black
+}
+.card-header{
+    color: black
+}
+.pizza-degerlendirme {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0;
+}
+.pizza-fiyat {
+    flex-grow: 3;
+    font-weight: bolder;
+    font-size: x-large;
+    color: black
+}
+.pizza-rating {
+    flex-grow: 1;
+    text-align: end;
+}
+
+.pizza-yorum {
+    flex-grow: 1;
+    text-align: end;
+}
+.pizza-boyut-hamur{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10rem;
+    line-height: 2rem;
+}
+.pizza-ek-malzemeler {
+    display: flex;
+    flex-direction: column;
+    max-height: 18vh;
+    flex-wrap: wrap;
+    column-gap: 8rem;
+    line-height: 2rem;
+
+}
+.pizza-siparis-notu textarea{
+    min-width: 100%;
+    max-width: 100%;
+}
+
+.pizza-sonuc-odeme {
+    display: flex;
+    justify-content: space-between;
+}
+.pizza-adet {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    text-align: center;
+    align-items: center;
+    align-content: center;
+}
+
+.pizza-toplam {
+    flex-grow: 2;
+}
+
+
+.quattrocento-regular {
+    font-family: "Quattrocento", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .quattrocento-bold {
+    font-family: "Quattrocento", serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+  .satisfy-regular {
+    font-family: "Satisfy", cursive;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .barlow-medium {
+    font-family: "Barlow", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+  }
+  
+  
+  .barlow-black-italic {
+    font-family: "Barlow", sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    color: white;
+  }
+  .roboto-condensed-font {
+    font-family: "Roboto Condensed", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+  }
+  

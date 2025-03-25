@@ -1,18 +1,22 @@
-
-
 import './App.css'
-import Anasayfa from '../pages/Anasayfa'
-import { BrowserRouter, Route } from 'react-router-dom/cjs/react-router-dom.min' 
-import Siparis from '../pages/Siparis'
+import Siparis from './pages/Siparis'
+import Anasayfa from './pages/Anasayfa'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import Sonuc from './pages/Sonuc'
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
 
 
   return (
+    <>
     <BrowserRouter>
-      <Siparis />
+      <Switch>
+        <Route 
+        <Siparis/>
+      </Switch>
     </BrowserRouter>
+    
+    </>
   )
 }
 
