@@ -18,8 +18,8 @@ function App() {
         <Anasayfa />
         </Route>
         
-        <Route path='/Siparis' exact><Siparis /></Route>
-        <Route path='/Sonuc' exact><Sonuc /></Route>
+        <Route path='/siparis' ><Siparis /></Route>
+        <Route path='/sonuc' ><Sonuc /></Route>
 
         
       </Switch>

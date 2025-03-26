@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import heroPng from '../assets/home-banner.png'
 
-const AnasayfaDiv = styled.div`
+export const AnasayfaDiv = styled.div`
     background-image: url(${heroPng});
     height: 100vh;
     width: 100vw;
@@ -18,17 +18,19 @@ const AnasayfaDiv = styled.div`
     font-family: "Londrina Solid", sans-serif;
     font-weight: 400;
     font-style: normal;
+    
 `
-const Slogan = styled.p`
+export const Slogan = styled.p`
     font-size: 5rem;
-    font-family: "Barlow", sans-serif;
+    font-family: "Roboto Condensed", sans-serif;
     font-weight: 300;
+    letter-spacing: .2rem;
     font-style: normal;
 `
 const Button = styled.button`
-    border-radius: 1rem;
+    border-radius: 2rem;
     border: 1px solid transparent;
-    padding: 1em 3em;
+    padding: 1em 4em;
     font-size: 1em;
     font-family: "Barlow", sans-serif;
     font-weight: 500;
@@ -45,7 +47,8 @@ export default function Anasayfa(){
             <h1>Teknolojik Yemekler</h1>
             <Slogan>KOD ACIKTIRIR</Slogan>
             <Slogan>PİZZA, DOYURUR</Slogan>
-            <Link to={'./Siparis'}><Button>ACIKTIM</Button></Link>
+            <Link to={'./siparis'}><Button>ACIKTIM</Button></Link>
+            <Link to={'./sonuc'}><Button>SONUC</Button></Link>
            </AnasayfaDiv>
         </>
     )
