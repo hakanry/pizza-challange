@@ -41,7 +41,6 @@ export const Button = styled.button`
   background-color: #fdc913;
   cursor: pointer;
   transition: border-color 0.25s;
-  display: block;
 `;
 
 export default function Anasayfa() {

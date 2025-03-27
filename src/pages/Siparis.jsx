@@ -4,8 +4,18 @@ import { useHistory } from "react-router-dom";
 import { Baslik, Button } from "./Anasayfa";
 import styled from "styled-components";
 
-import { malzemeler } from "../../data";
+import { EkMalzemelerData } from "../../data";
 import Checkbox from "../components/Checkbox";
+
+const CheckBoxCSS = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-height: 17vh;
+  flex-wrap: wrap;
+  column-gap: 7rem;
+  line-height: 2rem;
+`;
 const HeaderSiparis = styled.div`
   color: white;
   font-family: "Londrina Solid", sans-serif;
@@ -112,14 +122,15 @@ export default function Siparis() {
   const [errors, setErrors] = useState({
     boyut: false,
     hamur: false,
+    malzemeler: false,
     adet: false,
   });
 
   useEffect(() => {
     if (
-      formData.boyut.check != "" &&
-      formData.hamur != "" &&
-      formData.adet != 0
+      formData.boyut.value !== "" &&
+      formData.hamur.selected !== "" &&
+      formData.adet !== 0
     ) {
       setIsValid(true);
     } else {
@@ -128,18 +139,19 @@ export default function Siparis() {
   }, [formData]);
 
   function handleChange(event) {
-    let { name, value, checked, type } = event.target;
-
+    let { name, value, id, type } = event.target;
+    value = type === "radio" ? id : value;
     if (type === "checkbox") {
       const oldValues = formData.malzeme;
       if (oldValues.includes(value)) {
         value = oldValues.filter((v) => {
           v !== value;
         });
-        checked = false;
+      } else if (oldValues.length > 10) {
+        setErrors({ ...errors, [name]: true });
       } else {
         value = [...oldValues, value];
-        checked = true;
+        setErrors({ ...errors, [name]: false });
       }
     }
 
@@ -187,66 +199,61 @@ export default function Siparis() {
         <BoyutHamur>
           <BoyutDiv>
             <h3>Boyut Seç</h3>
-            <div check>
-              <label>
-                <input
-                  name="boyut"
-                  type="radio"
-                  value="kucuk"
-                  onChange={handleChange}
-                  checked={formData.boyut === "kucuk"}
-                />
-                {"  "}
-                Küçük
-              </label>
-            </div>
-            <div check>
-              <label>
-                <input
-                  name="boyut"
-                  type="radio"
-                  value="orta"
-                  onChange={handleChange}
-                  checked={formData.boyut === "orta"}
-                />
-                {"  "}
-                Orta
-              </label>
-            </div>
-            <div check>
-              <label>
-                <input
-                  name="boyut"
-                  type="radio"
-                  value="buyuk"
-                  onChange={handleChange}
-                  checked={formData.boyut === "buyuk"}
-                />
-                {"  "}
-                Büyük
-              </label>
-            </div>
+            <label>
+              <input
+                name="boyut"
+                type="radio"
+                value="kucuk"
+                id="kucuk"
+                onChange={handleChange}
+                checked={formData.boyut === "kucuk"}
+              />
+              {"  "}
+              Küçük
+            </label>
+            <label>
+              <input
+                name="boyut"
+                type="radio"
+                value="orta"
+                id="orta"
+                onChange={handleChange}
+                checked={formData.boyut === "orta"}
+              />
+              {"  "}
+              Orta
+            </label>
+            <label>
+              <input
+                name="boyut"
+                type="radio"
+                value="buyuk"
+                id="buyuk"
+                onChange={handleChange}
+                checked={formData.boyut === "buyuk"}
+              />
+              {"  "}
+              Büyük
+            </label>
             {errors.boyut && <p>{errorMessages.boyut}</p>}
           </BoyutDiv>
           <div>
-            <div>
-              <h3 for="hamurSelect">Hamur Seç</h3>
-              <select
-                id="hamurSelect"
-                value={formData.hamur}
-                name="hamurSelect"
-                type="select"
-                onChange={handleChange}
-              >
-                <option value="" disabled selected>
-                  Hamur Kalınlığı
-                </option>
-                <option value="ince">İnce</option>
-                <option value="orta">Orta</option>
-                <option value="kalın">Kalın</option>
-              </select>
-              {errors.hamur && <p>{errorMessages.hamur}</p>}
-            </div>
+            <h3 for="hamur">Hamur Seç</h3>
+            <select
+              id="hamur"
+              value={formData.hamur}
+              name="hamur"
+              type="select"
+              onChange={handleChange}
+            >
+              <option value="" selected disabled>
+                Hamur Kalınlığı
+              </option>
+              <option value="ince">İnce</option>
+              <option value="orta">Orta</option>
+              <option value="kalın">Kalın</option>
+            </select>
+            {errors.hamur && <p>{errorMessages.hamur}</p>}
           </div>
         </BoyutHamur>
         <EkMalzemeText>
@@ -260,15 +267,17 @@ export default function Siparis() {
             {formData.adet}
           </p>
         </EkMalzemeText>
-        {malzemeler.map((malz) => {
-          <Checkbox
-            handleChFn={handleChange}
-            isChecked={formData.malzeme.includes(malz.valueOf)}
-            fieldName="ekMalzemeler"
-            value={malz.valueOf}
-            label={malz.label}
-          ></Checkbox>;
-        })}
+        <CheckBoxCSS>
+          {EkMalzemelerData.map((item) => (
+            <Checkbox
+              handleChFn={handleChange}
+              isChecked={formData.malzeme.includes(item)}
+              fieldName="malzeme"
+              value={item}
+              label={item}
+            ></Checkbox>
+          ))}
+        </CheckBoxCSS>
         <EkMalzemeText>
           <h3>Sipariş Notu</h3>
           <SiparisInput
