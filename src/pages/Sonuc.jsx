@@ -1,9 +1,9 @@
-import { AnasayfaDiv,Slogan } from "./Anasayfa"
+import { AnasayfaDiv,Baslik,Slogan } from "./Anasayfa"
 export default function Sonuc(){
     return (
         <>
             <AnasayfaDiv>
-                <h1>Teknolojik Yemekler</h1>
+                <Baslik>Teknolojik Yemekler</Baslik>
                 <Slogan>TEBRİKLER!</Slogan>
                 <Slogan>SİPARİŞİNİZ ALINDI!</Slogan>
             </AnasayfaDiv>
