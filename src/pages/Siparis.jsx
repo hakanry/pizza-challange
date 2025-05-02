@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Baslik, Button } from "./Anasayfa";
 import styled from "styled-components";
 
@@ -127,11 +127,7 @@ export default function Siparis() {
   });
 
   useEffect(() => {
-    if (
-      formData.boyut.value !== "" &&
-      formData.hamur.selected !== "" &&
-      formData.adet !== 0
-    ) {
+    if (formData.boyut !== "" && formData.hamur !== "" && formData.adet !== 0) {
       setIsValid(true);
     } else {
       setIsValid(false);
@@ -143,11 +139,12 @@ export default function Siparis() {
     value = type === "radio" ? id : value;
     if (type === "checkbox") {
       const oldValues = formData.malzeme;
-      if (oldValues.includes(value)) {
-        value = oldValues.filter((v) => {
-          v !== value;
+      if (formData.malzeme.includes(value)) {
+        value = formData.malzeme.filter((v) => {
+          value !== v;
         });
-      } else if (oldValues.length > 10) {
+      } else if (formData.malzeme.length >= 10) {
+        formData.malzeme = [];
         setErrors({ ...errors, [name]: true });
       } else {
         value = [...oldValues, value];
@@ -167,6 +164,7 @@ export default function Siparis() {
       .then((result) => {
         setFormData(defData);
         history.push("./sonuc");
+        console.log(result.data);
       })
       .catch((err) => {
         console.warn(err);
@@ -178,7 +176,10 @@ export default function Siparis() {
       <HeaderSiparis>
         <Baslik>Teknolojik Yemekler</Baslik>
         <p>
-          Anasayfa - <strong>Sipariş Oluştur</strong>
+          <Link to="./anasayfa" style={{ color: "white" }}>
+            Anasayfa
+          </Link>{" "}
+          - <strong>Sipariş Oluştur</strong>
         </p>
       </HeaderSiparis>
       <FormCSS onSubmit={handleSubmit}>
@@ -268,10 +269,11 @@ export default function Siparis() {
           </p>
         </EkMalzemeText>
         <CheckBoxCSS>
-          {EkMalzemelerData.map((item) => (
+          {EkMalzemelerData.map((item, indx) => (
             <Checkbox
+              key={indx}
               handleChFn={handleChange}
-              isChecked={formData.malzeme.includes(item)}
+              isChecked={formData.malzeme.includes(item) || false}
               fieldName="malzeme"
               value={item}
               label={item}
@@ -281,9 +283,10 @@ export default function Siparis() {
         <EkMalzemeText>
           <h3>Sipariş Notu</h3>
           <SiparisInput
-            type="textarea"
+            type="text"
             name="not"
             placeholder="Siparişine eklemek istediğin bir not var mı?"
+            value={formData.not}
             onChange={formData.not}
           />
         </EkMalzemeText>
