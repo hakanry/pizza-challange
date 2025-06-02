@@ -9,98 +9,86 @@ import Checkbox from "../components/Checkbox";
 
 const CheckBoxCSS = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  max-height: 17vh;
   flex-wrap: wrap;
-  column-gap: 7rem;
-  line-height: 2rem;
+  gap: 1rem;
+  max-width: 70vh;
+  max-height: 25vh;
+  overflow-y: auto;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    max-height: none;
+  }
+  @media (min-width: 768px) {
+    flex-direction: column;
+    max-height: 20vh;
+    col-gap: 2rem;
+  }
 `;
 const HeaderSiparis = styled.div`
   color: white;
   font-family: "Londrina Solid", sans-serif;
-  font-weight: 400;
-  font-style: normal;
   background-color: #ce2829;
   padding: 1rem;
   width: 100%;
   & > p {
-    text-align: start;
-    padding-left: 36rem;
+    text-align: center;
     font-family: "Roboto Condensed", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: <weight>;
-    font-style: normal;
   }
 `;
 const PizzaDegerlendirme = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-width: 100%;
+  width: 100%;
 `;
 const PizzaText = styled.p`
   text-align: start;
   color: #5f5f5f;
-  margin: 0;
 `;
 const FormCSS = styled.form`
-  max-width: 40%;
+  max-width: 100%;
+  width: 60%;
+  margin: auto;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  text-align: left;
   font-family: "Barlow", sans-serif;
-  font-weight: 400;
-  font-style: normal;
 `;
 const BoyutHamur = styled.div`
   display: flex;
-  min-width: 100%;
+  flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  gap: 2rem;
+  flex-wrap: wrap;
 `;
 const BoyutDiv = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   color: #5f5f5f;
 `;
 const EkMalzemeText = styled.div`
-  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   & > p {
-    padding: 0rem;
-    margin: 0rem 0rem 1rem 0rem;
+    margin-bottom: 1rem;
   }
 `;
 const SiparisInput = styled.input`
-  width: 94%;
+  width: 100%;
   border: 1px solid black;
   border-radius: 1rem;
   padding: 1rem;
 `;
 const AdetveOdeme = styled.div`
-  min-width: 100%;
   display: flex;
-  justify-content: space-between;
-  & > div {
-    flex-grow: 3;
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    text-align: center;
-    align-items: center;
-    align-content: center;
-  }
-  & > section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    flex-grow: 1;
+  flex-direction: column;
+  gap: 1rem;
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
   }
 `;
+
 const defData = {
   boyut: "",
   hamur: "",
@@ -117,7 +105,7 @@ const errorMessages = {
 export default function Siparis() {
   const [formData, setFormData] = useState(defData);
   const [isValid, setIsValid] = useState(false);
-  const [fiyat, setFiyat] = useState(85.5);
+  const [fiyat] = useState(85.5); // sabit tutuldu
   const history = useHistory();
   const [errors, setErrors] = useState({
     boyut: false,
@@ -127,7 +115,7 @@ export default function Siparis() {
   });
 
   useEffect(() => {
-    if (formData.boyut !== "" && formData.hamur !== "" && formData.adet !== 0) {
+    if (formData.boyut && formData.hamur && formData.adet > 0) {
       setIsValid(true);
     } else {
       setIsValid(false);
@@ -136,39 +124,44 @@ export default function Siparis() {
 
   function handleChange(event) {
     let { name, value, id, type } = event.target;
-    value = type === "radio" ? id : value;
+    if (type === "radio") value = id;
     if (type === "checkbox") {
-      const oldValues = formData.malzeme;
-      if (formData.malzeme.includes(value)) {
-        value = formData.malzeme.filter((v) => {
-          value !== v;
-        });
-      } else if (formData.malzeme.length >= 10) {
-        formData.malzeme = [];
-        setErrors({ ...errors, [name]: true });
-      } else {
-        value = [...oldValues, value];
-        setErrors({ ...errors, [name]: false });
+      const newValues = formData.malzeme.includes(value)
+        ? formData.malzeme.filter((v) => v !== value)
+        : [...formData.malzeme, value];
+
+      if (newValues.length > 10) {
+        setErrors((prev) => ({ ...prev, malzemeler: true }));
+        return;
       }
+
+      setErrors((prev) => ({ ...prev, malzemeler: false }));
+      setFormData({ ...formData, [name]: newValues });
+      return;
     }
 
     setFormData({ ...formData, [name]: value });
-    console.log(formData);
   }
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (isValid === false) return;
+    const newErrors = {
+      boyut: !formData.boyut,
+      hamur: !formData.hamur,
+      malzemeler: formData.malzeme.length > 10,
+      adet: formData.adet <= 0,
+    };
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).some(Boolean)) return;
+
     axios
       .post("https://reqres.in/api/pizza", formData)
-      .then((result) => {
+      .then(() => {
         setFormData(defData);
         history.push("./sonuc");
-        console.log(result.data);
       })
-      .catch((err) => {
-        console.warn(err);
-      });
+      .catch((err) => console.warn(err));
   };
 
   return (
@@ -200,59 +193,39 @@ export default function Siparis() {
         <BoyutHamur>
           <BoyutDiv>
             <h3>Boyut Seç</h3>
-            <label>
-              <input
-                name="boyut"
-                type="radio"
-                value="kucuk"
-                id="kucuk"
-                onChange={handleChange}
-                checked={formData.boyut === "kucuk"}
-              />
-              {"  "}
-              Küçük
-            </label>
-            <label>
-              <input
-                name="boyut"
-                type="radio"
-                value="orta"
-                id="orta"
-                onChange={handleChange}
-                checked={formData.boyut === "orta"}
-              />
-              {"  "}
-              Orta
-            </label>
-            <label>
-              <input
-                name="boyut"
-                type="radio"
-                value="buyuk"
-                id="buyuk"
-                onChange={handleChange}
-                checked={formData.boyut === "buyuk"}
-              />
-              {"  "}
-              Büyük
-            </label>
+            {["kucuk", "orta", "buyuk"].map((size) => (
+              <label key={size}>
+                <input
+                  name="boyut"
+                  type="radio"
+                  value={size}
+                  id={size}
+                  onChange={handleChange}
+                  checked={formData.boyut === size}
+                />
+                {"  " + size.charAt(0).toUpperCase() + size.slice(1)}
+              </label>
+            ))}
             {errors.boyut && <p>{errorMessages.boyut}</p>}
           </BoyutDiv>
           <div>
-            <h3 for="hamur">Hamur Seç</h3>
+            <label htmlFor="hamur">
+              <h3>Hamur Seç</h3>
+            </label>
             <select
               id="hamur"
               value={formData.hamur}
               name="hamur"
-              type="select"
               onChange={handleChange}
             >
-              <option value="" selected disabled>
+              <option value="" disabled>
                 Hamur Kalınlığı
               </option>
-              <option value="ince">İnce</option>
-              <option value="orta">Orta</option>
-              <option value="kalın">Kalın</option>
+              {["ince", "orta", "kalın"].map((h) => (
+                <option key={h} value={h}>
+                  {h.charAt(0).toUpperCase() + h.slice(1)}
+                </option>
+              ))}
             </select>
             {errors.hamur && <p>{errorMessages.hamur}</p>}
           </div>
@@ -260,24 +233,20 @@ export default function Siparis() {
         <EkMalzemeText>
           <h3>Ek Malzemeler</h3>
           <p>En fazla 10 malzeme seçebilirsiniz. 5 ₺</p>
-          <p style={{ color: "black", width: "100%", margin: "2rem auto" }}>
-            {formData.boyut}
-            {formData.hamur}
-            {formData.malzeme}
-            {formData.not}
-            {formData.adet}
-          </p>
+          {errors.malzemeler && (
+            <p style={{ color: "red" }}>En fazla 10 malzeme seçebilirsiniz.</p>
+          )}
         </EkMalzemeText>
         <CheckBoxCSS>
           {EkMalzemelerData.map((item, indx) => (
             <Checkbox
               key={indx}
               handleChFn={handleChange}
-              isChecked={formData.malzeme.includes(item) || false}
+              isChecked={formData.malzeme.includes(item)}
               fieldName="malzeme"
               value={item}
               label={item}
-            ></Checkbox>
+            />
           ))}
         </CheckBoxCSS>
         <EkMalzemeText>
@@ -287,21 +256,20 @@ export default function Siparis() {
             name="not"
             placeholder="Siparişine eklemek istediğin bir not var mı?"
             value={formData.not}
-            onChange={formData.not}
+            onChange={handleChange}
           />
         </EkMalzemeText>
-        <hr style={{ width: "100%", margin: "2rem auto" }}></hr>
+        <hr />
         <AdetveOdeme>
           <div>
             <Button
               type="button"
-              onClick={() => {
-                if (formData.adet > 0)
-                  return setFormData({
-                    ...formData,
-                    adet: formData.adet - 1,
-                  });
-              }}
+              onClick={() =>
+                setFormData({
+                  ...formData,
+                  adet: Math.max(0, formData.adet - 1),
+                })
+              }
             >
               -
             </Button>
@@ -312,9 +280,8 @@ export default function Siparis() {
                 setFormData({ ...formData, adet: formData.adet + 1 })
               }
             >
-              +{" "}
+              +
             </Button>
-
             {errors.adet && <p>{errorMessages.adet}</p>}
           </div>
           <section>
